@@ -1,0 +1,149 @@
+#bottom{
+  margin-top:50px;
+}
+
+.mypage_title {
+    padding-bottom: 20px;
+}
+
+.page-nav a.prev {
+    background-position : 0 0;
+}
+
+.page-nav a.next {
+    background-position : 0 0;
+}
+
+/* css ì¶”ê°€ */
+
+.popup_detail {
+    width: 815px;
+    height: 600px;
+    border: 2px solid #000;
+}
+.d_left {
+    float: left;
+    width: 500px;
+    height: 600px;
+    background-color: #fff;
+    padding: 40px;
+    box-sizing: border-box;
+    border-right: 1px solid #e6e6e6;
+}
+.d_right {
+    float: right;
+    width: 315px;
+    height: 600px;
+    position: relative;
+}
+.d_left_in {
+    padding:0;
+}
+.d_right_img {
+    width: 420px;
+    height: 420px;
+    overflow: hidden;
+    margin: 0;
+    position: relative;
+}
+.d_left_in ul {
+    width: auto;
+    margin-top: 30px;
+}
+.d_left_in ul li {
+    width: 50px;
+    margin: 0 12px 0 0;
+    float: left;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    height: 50px;
+}
+.d_left_in ul li:nth-child(2n) {
+    margin-right: 12px;
+}
+.d_right_text{
+    margin: 70px 40px 0 40px;
+}
+.d_right_tit{
+    color:#444;
+    font-size:13px;
+    font-weight:700;
+}
+.d_right_text .buynow{
+    margin-top: 30px;
+    color:#ed5757;
+    font-weight: 700;
+}
+.buynow .buy_box{
+    width: 50px;
+    height: 20px;
+    display: inline-block;
+    border:1px solid #ed5757;
+    text-align: center;
+    line-height: 20px;
+    font-size: 11px;
+    margin-right: 7px;
+}
+.buynow .roboto {
+    font-size: 13.5px;
+    letter-spacing: -.5px;
+}
+.right_money {
+    margin-top: 10px;
+    font-weight: 900;
+    color: #1a1a1a;
+    font-size: 16px;
+    letter-spacing: -.5px;
+}
+.right_money .kor_money{
+    font-size: 14px;
+    color:#bab8b8;
+}
+.d_right_text .line{
+    border-top:1px solid #ebebeb;
+    margin: 45px 0;
+}
+.d_right_text .info_box{
+    display: flex;
+    flex-wrap:wrap;
+    box-sizing: border-box;
+}
+.g_item{
+    color:#888;
+    width: 35%;
+}
+.b_item{
+    color:#519bed;
+    width: 65%;
+}
+.g_item , .b_item{
+    margin-bottom: 10px;
+}
+.d_right_text .btn_box{
+    margin-top: 35px;
+    display: flex;
+    justify-content: space-between;
+}
+.d_right_text .btn_box a {
+    display: block;
+    width: calc(50% - 6px);
+    border: 1px solid #999;
+    padding: 15px 0;
+    text-align: center;
+    color: #4d4d4d;
+    text-decoration: none;
+}
+.d_right_text .click_detail{
+    margin-top: 12px;
+}
+.d_right_text .click_detail a {
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    background-color: #242424;
+    color: #fff;
+    text-align: center;
+    font-weight: 700;
+    text-decoration: none;
+}

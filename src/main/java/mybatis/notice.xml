@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "notice">
+<insert id="insertNotice" parameterType="notice">
+    INSERT INTO anotice (num, name, pass, subject, content, file1, regdate, readcnt, boardid,answer,ispublic)
+    VALUES (anoticeseq.nextval, #{name}, #{pass}, #{subject}, #{content}, #{file1}, sysdate, 0, #{boardid},#{answer},#{ispublic})
+</insert>
+
+<select id = "noticeList" parameterType="map" resultType="notice">
+select * from( 
+                select rownum rnum, a.* from(
+         		 select * from anotice where boardid = #{boardid}
+         		order by num desc) a)
+         		 where rnum between #{start} and #{end} 
+
+</select>
+<select id = "contentanswer" resultType="notice" parameterType="int">
+
+select * from anotice where boardid = 3 and num=#{num}
+
+
+
+</select>
+<update id = "updateAnswer"  parameterType="map">
+
+ UPDATE anotice SET answer = #{answer} WHERE num = #{num}
+
+</update>
+
+<select id = "allNotice"   resultType="notice" >
+select * from anotice where boardid = 3
+</select>
+
+<select id = "noticeCount" resultType="int" parameterType="string">
+
+select nvl (count(*),0) from anotice where boardid = #{boardid}
+
+</select>
+
+<select id = "oneNotice"  parameterType ="int" resultType="notice" >
+
+select * from anotice where num = #{num}
+
+
+</select>
+
+<update id="updateNotice" parameterType="notice">
+
+
+update anotice set name=#{name},subject=#{subject},content=#{content},file1=#{file1} where num =#{num}
+
+ </update>
+ 
+ <delete id="noticeDelete" parameterType="int">
+ 
+ delete from anotice where num =#{num}
+ 
+ </delete>
+ 
+<select id = "mynotice" resultType="notice" parameterType="map">
+SELECT a.num, a.name, a.subject, a.regdate, a.readcnt, a.file1
+        FROM anotice a
+        JOIN amem m ON a.name = m.id
+        WHERE a.boardid = 3 AND m.id = #{loggedInUserId}
+        ORDER BY a.num DESC 
+</select>
+
+</mapper>

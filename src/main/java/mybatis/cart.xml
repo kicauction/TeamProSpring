@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "cart">
+<insert id="addToAproducts" parameterType="cart">
+    INSERT INTO Aproducts (ser, id, pnum) 
+    values (Aproduct.nextval, #{id}, #{pnum})
+</insert>
+
+<select id="jumunList" parameterType="map" resultType="Auction">
+SELECT 
+        a.pnum, a.buy, a.idate,a.prompt, a.pname, a.file1, a.subject, a.price, a.readcnt, TO_CHAR(a.regdate, 'yyyy-MM-dd HH24:mi:ss') AS regdate
+        ,(select nvl(count(pnum),0)  from abuylist where pnum= a.pnum)  maxid
+    FROM 
+        amem m
+    JOIN 
+        aproducts ap ON m.id = ap.id
+    JOIN 
+        auction a ON ap.pnum = a.pnum
+    WHERE 
+        m.id = #{id}
+    ORDER BY 
+    a.pnum DESC
+</select>
+
+   <select id="myList" parameterType="map" resultType="Auction">
+      SELECT
+            b.userid,
+            b.pnum,
+            b.prompt,
+            b.pname,
+            b.file1,
+            b.subject,
+            b.price,
+            b.readcnt,
+            TO_CHAR(b.regdate, 'yyyy-MM-dd HH24:mi:ss') AS regdate,
+            (select nvl(count(pnum),0)  from abuylist where pnum= b.pnum)  maxid
+        FROM
+            amem a
+        JOIN
+            auction b ON a.id = b.userid
+        WHERE 
+            a.id = #{loggedInUserId}
+        ORDER BY 
+            b.pnum DESC
+    </select>
+
+<delete id="jumunDelete"  parameterType="int">
+delete from aproducts where pnum = #{pnum}
+</delete> 
+
+<select id="Tier" parameterType="string" resultType="String">
+ SELECT Tier FROM
+    (
+        SELECT
+            SUM(BUY) as total_AMOUNT,
+            CASE
+                WHEN SUM(BUY) &lt; 10000 THEN 'Silver'
+                WHEN SUM(BUY) BETWEEN 50000 AND 100000 THEN 'Gold'
+                WHEN SUM(BUY) BETWEEN 100001 AND 300000 THEN 'Platinum'
+                ELSE 'Diamond'
+            END AS Tier
+        FROM
+            apay
+        WHERE
+            id = #{id}
+        GROUP BY
+           id
+    ) 
+    </select>
+    
+    <!-- point 사용  sum = 누적 마일리지, sum2 = 누적금액, sum3 = 마일리지를 넣고 사용하기 버튼누를시 나오는금액 , sp = 사용마일리지 -->
+<update id="sum" parameterType="string">
+    UPDATE amem
+SET mile = (
+    SELECT SUM((buy * 0.05) - sp) 
+    FROM apay 
+    WHERE id=#{id})
+WHERE id=#{id}
+</update>
+
+
+
+<select id="sum2" parameterType="string" resultType="long">
+   select sum(buy) from apay where id=#{id}
+</select>
+
+   
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

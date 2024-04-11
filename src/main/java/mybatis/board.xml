@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<insert id="insertBoard" parameterType="Auction">
+		INSERT INTO auction (PNUM, PNAME, PRICE, prompt, SUBJECT, CONTENT, PASS,
+		FILE1, BOARDID, REGDATE, READCNT, USERID, BUY, BUYID,IDATE)
+		VALUES (boardseq.nextval, #{pname}, #{price}, #{prompt}, #{subject},
+		#{content}, #{pass}, #{file1}, #{boardid}, sysdate,
+		0,#{userid},#{buy},#{buyid},sysdate)
+	</insert>
+
+
+<update id="end" parameterType="map">
+    update auction set end=#{end} where pnum=#{pnum}
+</update>
+
+	
+
+
+	<update id="updateBuy" parameterType="Auction">
+		update auction set buy=#{buy},buyid=#{buyid} where pnum=#{pnum}
+	</update>
+
+
+
+
+<select id="buyList" parameterType="string" resultType="Auction">
+		SELECT a.*
+		FROM auction a
+		INNER JOIN amem m ON a.buyid = m.id
+		WHERE a.buyid IS NOT NULL
+		AND m.id = #{loggedInUserId}
+	</select>
+
+
+	<insert id="apay" parameterType="apay">
+	     INSERT INTO apay (name, tel, address, memo, pnum, regdate, buy, sp,id)
+    VALUES (#{name}, #{tel}, #{address}, #{memo}, #{pnum}, sysdate, #{buy}, #{sp},#{id})
+</insert>
+
+
+
+	<insert id="insertBuy" parameterType="Auction">
+		insert abuy set buy=#{buy},buyid=#{buyid} where pnum=#{pnum}
+
+	</insert>
+
+
+
+
+
+
+	<!-- AuctionMapper.xml -->
+	<update id="buyNow" parameterType="map">
+		update auction set regdate = null, buyid = #{userid},buy = #{prompt} where
+		pnum = #{pnum}
+	</update>
+	<select id="cntList" parameterType="string" resultType="auction">
+		SELECT * FROM auction ORDER BY ${value}
+	</select>
+	<update id="upcnt" parameterType="int">
+		UPDATE Aboardcomment
+		SET upcnt = upcnt + 1
+		WHERE ser = #{value}
+	</update>
+
+	<select id="getupcnt" parameterType="int" resultType="int">
+		SELECT upcnt FROM Aboardcomment where ser = #{ser}
+	</select>
+	<insert id="cntBoard" parameterType="Auction">
+		UPDATE auction
+		SET readcnt = readcnt + 1
+		WHERE pnum = #{pnum}
+	</insert>
+	<select id="searchBoards" parameterType="string"
+		resultType="auction">
+		SELECT * FROM auction
+		WHERE pname LIKE '%${value}%'
+	</select>
+	<select id="boardList" parameterType="map" resultType="Auction">
+		select * from (
+		select rownum rnum,a.* from (
+		select * from auction where
+		boardid = #{boardid}
+		order by pnum desc) a)
+		where rnum between #{start}
+		and #{end}
+	</select>
+	<select id="boardCount" resultType="int" parameterType="string">
+		select nvl(count(*),0) from auction where boardid = #{boardid}
+	</select>
+
+	<select id="oneBoard" parameterType="int" resultType="Auction">
+		select * from auction where pnum = #{pnum}
+	</select>
+	
+	
+
+
+	<insert id="updateBoard" parameterType="Auction">
+		update auction set
+		pname=#{pname},subject=#{subject},content=#{content},file1=#{file1},price=#{price},prompt=#{prompt}
+		where pnum =#{pnum}
+	</insert>
+
+
+	<delete id="boardDelete" parameterType="int">
+		delete from auction where pnum = #{pnum}
+	</delete>
+
+	<insert id="insertComment" parameterType="map">
+		insert into Aboardcomment values (Aboardcomseq.nextval, #{num}, #{comment},
+		sysdate, #{userid}, 0)
+	</insert>
+
+	<select id="commentList" parameterType="int"
+		resultType="comment">
+		select * from Aboardcomment where num = #{num} order by regdate desc
+	</select>
+
+	<select id="mainList" parameterType="map" resultType="Auction">
+		select * from (
+		select rownum rnum,a.* from (
+		select * from auction
+		order by
+		pnum desc) a)
+		where rnum between 0 and 10
+	</select>
+	
+<!-- board.xml -->
+<select id="endListByLoginId" parameterType="map" resultType="Auction">
+    SELECT * FROM auction
+    WHERE end = 1 AND buyid = #{loginId}
+    ORDER BY pnum DESC
+</select>
+
+
+
+	<delete id="commentDelete" parameterType="int">
+		delete from Aboardcomment where ser = #{ser}
+	</delete>
+
+	<select id="oneComment" parameterType="int" resultType="Comment">
+		select * from Aboardcomment where ser = #{ser}
+	</select>
+
+	
+
+	<!-- 경매기록 test -->
+
+	<insert id="addTobuyList" parameterType="AddbuyList">
+		INSERT INTO AbuyList (pnum, buyid, buydate, buy, buycnt)
+		values (#{pnum}, #{buyid}, sysdate, #{buy}, #{buycnt})
+	</insert>
+
+
+
+	<select id="List" resultType="AddbuyList" parameterType="int">
+		SELECT buyid, buydate, buy
+		FROM abuyList
+		WHERE pnum = #{pnum}
+	</select>
+
+	<select id="maxbuycnt" resultType="int" parameterType="int">
+		SELECT nvl(count(buyid),0)
+		FROM abuyList
+		where pnum = #{pnum}
+
+	</select>
+</mapper>
+
+
+
+
+
+
+
